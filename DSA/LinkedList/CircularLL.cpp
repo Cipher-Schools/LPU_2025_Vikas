@@ -13,7 +13,7 @@ public:
     }
 };
 
-// LinkedList class with all operations
+// Circular Linked List class
 class LinkedList {
 private:
     Node* head;
@@ -26,6 +26,17 @@ public:
     // Insert at beginning
     void insertAtBeginning(int val) {
         Node* newNode = new Node(val);
+        if (head == nullptr) {
+            head = newNode;
+            head->next = head;
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != head)
+            temp = temp->next;
+
+        temp->next = newNode;
         newNode->next = head;
         head = newNode;
     }
@@ -35,12 +46,16 @@ public:
         Node* newNode = new Node(val);
         if (head == nullptr) {
             head = newNode;
+            head->next = head;
             return;
         }
+
         Node* temp = head;
-        while (temp->next != nullptr)
+        while (temp->next != head)
             temp = temp->next;
+
         temp->next = newNode;
+        newNode->next = head;
     }
 
     // Insert at given position (1-based)
@@ -51,17 +66,21 @@ public:
         }
 
         Node* newNode = new Node(val);
+
+        // Case 1: Insert at beginning
         if (pos == 1) {
-            newNode->next = head;
-            head = newNode;
+            insertAtBeginning(val);
             return;
         }
 
         Node* temp = head;
-        for (int i = 1; temp != nullptr && i < pos - 1; i++)
+        int count = 1;
+        while (count < pos - 1 && temp->next != head) {
             temp = temp->next;
+            count++;
+        }
 
-        if (temp == nullptr) {
+        if (count != pos - 1) {
             cout << "Position out of range!\n";
             delete newNode;
             return;
@@ -77,9 +96,24 @@ public:
             cout << "List is empty.\n";
             return;
         }
+
+        if (head->next == head) {
+            delete head;
+            head = nullptr;
+            cout << "Last node deleted.\n";
+            return;
+        }
+
         Node* temp = head;
+        Node* tail = head;
+
+        while (tail->next != head)
+            tail = tail->next;
+
         head = head->next;
+        tail->next = head;
         delete temp;
+
         cout << "Node deleted from beginning.\n";
     }
 
@@ -90,7 +124,7 @@ public:
             return;
         }
 
-        if (head->next == nullptr) {
+        if (head->next == head) {
             delete head;
             head = nullptr;
             cout << "Last node deleted.\n";
@@ -98,11 +132,12 @@ public:
         }
 
         Node* temp = head;
-        while (temp->next->next != nullptr)
+        while (temp->next->next != head)
             temp = temp->next;
 
         delete temp->next;
-        temp->next = nullptr;
+        temp->next = head;
+
         cout << "Node deleted from end.\n";
     }
 
@@ -119,17 +154,22 @@ public:
         }
 
         Node* temp = head;
-        for (int i = 1; temp != nullptr && i < pos - 1; i++)
-            temp = temp->next;
+        int count = 1;
 
-        if (temp == nullptr || temp->next == nullptr) {
+        while (count < pos - 1 && temp->next != head) {
+            temp = temp->next;
+            count++;
+        }
+
+        if (temp->next == head) {
             cout << "Position out of range!\n";
             return;
         }
 
         Node* del = temp->next;
-        temp->next = temp->next->next;
+        temp->next = del->next;
         delete del;
+
         cout << "Node deleted at position " << pos << ".\n";
     }
 
@@ -139,12 +179,13 @@ public:
             cout << "List is empty.\n";
             return;
         }
-        cout << "Singly Linked List: ";
+
         Node* temp = head;
-        while (temp != nullptr) {
+        cout << "Circular Linked List: ";
+        do {
             cout << temp->data << " ";
             temp = temp->next;
-        }
+        } while (temp != head);
         cout << endl;
     }
 };
