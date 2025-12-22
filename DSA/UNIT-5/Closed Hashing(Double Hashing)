@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+#define SIZE 7
+#define R 5   // prime smaller than table size
+
+class HashTable {
+    int table[SIZE];
+
+public:
+    HashTable() {
+        for (int i = 0; i < SIZE; i++)
+            table[i] = -1;
+    }
+
+    int hash1(int key) {
+        return key % SIZE;
+    }
+
+    int hash2(int key) {
+        return R - (key % R);
+    }
+
+    void insert(int key) {
+        int index1 = hash1(key);
+        int index2 = hash2(key);
+
+        int i = 0;
+        while (table[(index1 + i * index2) % SIZE] != -1)
+            i++;
+
+        table[(index1 + i * index2) % SIZE] = key;
+    }
+
+    void display() {
+        for (int i = 0; i < SIZE; i++)
+            cout << i << " --> " << table[i] << endl;
+    }
+};
+
+int main() {
+    HashTable ht;
+
+    ht.insert(15);
+    ht.insert(22);
+    ht.insert(8);
+
+    ht.display();
+
+    return 0;
+}

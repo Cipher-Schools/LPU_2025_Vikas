@@ -1,0 +1,46 @@
+//Code for Seperte chaining
+#include<iostream>
+#include<list>
+using namespace std;
+
+#define SIZE 7
+
+class HashTable {
+    int table[SIZE];
+    
+public:
+    HashTable() {
+        for(int i = 0; i < SIZE; i++) {
+            table[i] = -1;
+        }
+    }
+    int hashFunction(int key) {
+        return key % SIZE;
+    }
+    
+    void insert(int key) {
+        int index =  hashFunction(key);
+        
+        //Linear Probinf
+        int i = 0;
+        while(table[(index + i) % SIZE] != -1) {
+            i++;
+        }
+        table[(index + i) % SIZE] = key;
+    }
+    void display() {
+        for(int i = 0; i < SIZE; i++) {
+            cout << i << " --> " << table[i] << endl;
+        }
+    }
+};
+int main() {
+    HashTable ht;
+    
+    ht.insert(15);
+    ht.insert(22);
+    ht.insert(8);
+    
+    ht.display();
+    return 0;
+}

@@ -1,0 +1,43 @@
+//Code for Seperte chaining
+#include<iostream>
+#include<list>
+using namespace std;
+
+class HashTable {
+    int size;
+    list<int>* table; //array of linked list
+    
+public:
+    HashTable(int size) {
+        this->size = size;
+        table = new list<int>[size];
+    }
+    int hashFunction(int key) {
+        return key % size;
+    }
+    
+    void insert(int key) {
+        int index = hashFunction(key);
+        table[index].push_back(key);
+    }
+    
+    void display() {
+        for(int i = 0; i < size; i++) {
+            cout << i << " --> ";
+            for(int key : table[i])
+                cout << key << " -> ";
+            cout << "NULL\n";
+        }
+    }
+};
+
+int main() {
+    HashTable ht(7);
+    
+    ht.insert(15);
+    ht.insert(22);
+    ht.insert(8);
+    
+    ht.display();
+    return 0;
+}
